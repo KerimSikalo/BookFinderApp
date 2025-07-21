@@ -1,0 +1,23 @@
+package ba.etfrma.bookish.navigation
+
+import androidx.compose.runtime.Composable
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import ba.etfrma.bookish.ui.screens.BookDetailsScreen
+import ba.etfrma.bookish.ui.screens.HomeScreen
+
+@Composable
+fun BookishNavGraph(startText: String? = null) {
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = "home") {
+        composable("home") {
+            HomeScreen(navController, initialSearch = startText ?: "")
+        }
+        composable("details/{id}") { backStackEntry ->
+            val id = backStackEntry.arguments?.getString("id") ?: ""
+            BookDetailsScreen(id = id, onBack = { navController.popBackStack() })
+        }
+    }
+}
