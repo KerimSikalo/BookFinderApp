@@ -42,7 +42,7 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
             isLoading = false
 
             if (localBooks.isEmpty()) {
-                snackbarHostState.showSnackbar("Nema lokalnih knjiga.")
+                snackbarHostState.showSnackbar("No local books available.")
             }
         } else {
             isLoading = true
@@ -105,7 +105,6 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
                 )
                 .padding(innerPadding)
         ) {
-            // Header section with search
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -122,7 +121,7 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Text(
-                        text = "Pronađi svoju sljedeću knjigu",
+                        text = "Find your next book",
                         style = MaterialTheme.typography.titleLarge.copy(
                             fontWeight = FontWeight.SemiBold
                         ),
@@ -131,7 +130,6 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    // Search section
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -140,11 +138,11 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
                         OutlinedTextField(
                             value = searchQuery,
                             onValueChange = { searchQuery = it },
-                            label = { Text("Pretraži po naslovu") },
+                            label = { Text("Search by title") },
                             leadingIcon = {
                                 Icon(
                                     Icons.Default.Search,
-                                    contentDescription = "Pretraži"
+                                    contentDescription = "Search"
                                 )
                             },
                             modifier = Modifier
@@ -166,7 +164,7 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
                                         val local = repository.loadBooksFromContentProvider(context)
                                         booksList.addAll(local)
                                         if (local.isEmpty()) {
-                                            snackbarHostState.showSnackbar("Nema lokalnih knjiga.")
+                                            snackbarHostState.showSnackbar("No local books available.")
                                         }
                                     } else {
                                         booksList.addAll(repository.searchBooks(searchQuery))
@@ -181,7 +179,7 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
                             )
                         ) {
                             Text(
-                                "Traži",
+                                "Search",
                                 fontWeight = FontWeight.Medium
                             )
                         }
@@ -189,7 +187,6 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
                 }
             }
 
-            // Content section
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -197,7 +194,6 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
             ) {
                 when {
                     isLoading -> {
-                        // Loading state
                         Column(
                             modifier = Modifier.align(Alignment.Center),
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -209,7 +205,7 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
                                 color = MaterialTheme.colorScheme.primary
                             )
                             Text(
-                                "Učitavanje knjiga...",
+                                "Loading books...",
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -217,7 +213,6 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
                     }
 
                     booksList.isEmpty() -> {
-                        // Empty state
                         Card(
                             modifier = Modifier
                                 .align(Alignment.Center)
@@ -237,7 +232,7 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
                                     style = MaterialTheme.typography.displayMedium
                                 )
                                 Text(
-                                    "Nema rezultata",
+                                    "No results",
                                     style = MaterialTheme.typography.titleLarge.copy(
                                         fontWeight = FontWeight.SemiBold
                                     ),
@@ -245,7 +240,7 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
                                     textAlign = TextAlign.Center
                                 )
                                 Text(
-                                    "Pokušajte sa drugim pojmom pretrage",
+                                    "Try searching with different keywords",
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                                     textAlign = TextAlign.Center
@@ -255,9 +250,7 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
                     }
 
                     else -> {
-                        // Results grid
                         Column {
-                            // Results header
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -266,7 +259,7 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = if (searchQuery.isBlank()) "Lokalne knjige" else "Rezultati pretrage",
+                                    text = if (searchQuery.isBlank()) "Local books" else "Search results",
                                     style = MaterialTheme.typography.titleMedium.copy(
                                         fontWeight = FontWeight.SemiBold
                                     ),
@@ -278,7 +271,7 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
                                     )
                                 ) {
                                     Text(
-                                        text = "Ukupno knjiga: ${booksList.size}",
+                                        text = "Total books: ${booksList.size}",
                                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
                                         style = MaterialTheme.typography.labelMedium.copy(
                                             fontWeight = FontWeight.Medium
@@ -288,7 +281,6 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
                                 }
                             }
 
-                            // Books grid
                             LazyVerticalGrid(
                                 columns = GridCells.Adaptive(minSize = 160.dp),
                                 contentPadding = PaddingValues(bottom = 24.dp),
@@ -301,7 +293,7 @@ fun HomeScreen(navController: NavController, initialSearch: String = "") {
                                             val localBook = repository.getBookByIdFromProvider(book.book.id, context)
                                             if (localBook == null) {
                                                 repository.saveToProvider(book, context)
-                                                snackbarHostState.showSnackbar("Knjiga je sačuvana u bazu.")
+                                                snackbarHostState.showSnackbar("Book has been saved to the database.")
                                             }
                                             navController.navigate("details/${book.book.id}")
                                         }

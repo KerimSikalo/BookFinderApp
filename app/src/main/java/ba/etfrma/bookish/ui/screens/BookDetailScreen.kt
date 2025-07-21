@@ -6,7 +6,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -54,13 +53,13 @@ fun BookDetailsScreen(id: String, onBack: () -> Unit) {
             TopAppBar(
                 title = {
                     Text(
-                        "Detalji Knjige",
+                        "Book Details",
                         fontWeight = FontWeight.Medium
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Nazad")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -88,7 +87,7 @@ fun BookDetailsScreen(id: String, onBack: () -> Unit) {
                         strokeWidth = 4.dp
                     )
                     Text(
-                        "Učitavanje...",
+                        "Loading...",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -102,13 +101,11 @@ fun BookDetailsScreen(id: String, onBack: () -> Unit) {
                         .padding(innerPadding)
                         .verticalScroll(rememberScrollState())
                 ) {
-                    // Hero section sa slikom
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(320.dp)
                     ) {
-                        // Gradient background
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -122,10 +119,9 @@ fun BookDetailsScreen(id: String, onBack: () -> Unit) {
                                 )
                         )
 
-                        // Book cover
                         AsyncImage(
                             model = bookData.book.thumbnail,
-                            contentDescription = "Korica knjige",
+                            contentDescription = "Book cover",
                             contentScale = ContentScale.Crop,
                             modifier = Modifier
                                 .align(Alignment.Center)
@@ -138,14 +134,12 @@ fun BookDetailsScreen(id: String, onBack: () -> Unit) {
                         )
                     }
 
-                    // Content section
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(24.dp),
                         verticalArrangement = Arrangement.spacedBy(24.dp)
                     ) {
-                        // Title
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             colors = CardDefaults.cardColors(
@@ -164,26 +158,24 @@ fun BookDetailsScreen(id: String, onBack: () -> Unit) {
                             )
                         }
 
-                        // Book info cards
                         InfoCard(
-                            title = "Autori",
+                            title = "Authors",
                             content = bookData.authors.joinToString { it.name },
                             icon = "👤"
                         )
 
                         InfoCard(
-                            title = "Izdavač",
+                            title = "Publisher",
                             content = bookData.book.publisher,
                             icon = "🏢"
                         )
 
                         InfoCard(
-                            title = "Kategorije",
+                            title = "Categories",
                             content = bookData.categories.joinToString { it.name },
                             icon = "📚"
                         )
 
-                        // Description
                         Card(
                             modifier = Modifier.fillMaxWidth(),
                             colors = CardDefaults.cardColors(
@@ -196,7 +188,7 @@ fun BookDetailsScreen(id: String, onBack: () -> Unit) {
                                 verticalArrangement = Arrangement.spacedBy(12.dp)
                             ) {
                                 Text(
-                                    text = "Opis",
+                                    text = "Description",
                                     style = MaterialTheme.typography.titleMedium.copy(
                                         fontWeight = FontWeight.SemiBold
                                     ),
@@ -212,12 +204,11 @@ fun BookDetailsScreen(id: String, onBack: () -> Unit) {
                             }
                         }
 
-                        // Action button
                         FilledTonalButton(
                             onClick = {
                                 scope.launch {
                                     repository.deleteFromProvider(bookData, context)
-                                    snackbarHostState.showSnackbar("Knjiga je uklonjena iz baze.")
+                                    snackbarHostState.showSnackbar("Book has been removed from the database.")
                                     onBack()
                                 }
                             },
@@ -236,14 +227,13 @@ fun BookDetailsScreen(id: String, onBack: () -> Unit) {
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                "Ukloni iz baze",
+                                "Remove from database",
                                 style = MaterialTheme.typography.labelLarge.copy(
                                     fontWeight = FontWeight.Medium
                                 )
                             )
                         }
 
-                        // Bottom spacing
                         Spacer(modifier = Modifier.height(32.dp))
                     }
                 }
@@ -259,7 +249,7 @@ fun BookDetailsScreen(id: String, onBack: () -> Unit) {
                     )
                 ) {
                     Text(
-                        "Knjiga nije pronađena",
+                        "Book not found",
                         modifier = Modifier.padding(24.dp),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onErrorContainer
